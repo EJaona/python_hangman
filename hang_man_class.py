@@ -23,11 +23,9 @@ class Hang_man:
         self.__current_player["score"]:int = score_board[player] if player in score_board else 0
         self.__current_player["lives"]:int = len(self.__word)
 
-    def __display_high_score(self):
-        print(f"{ underline(self.__top_player or 'Top_Score') }: { colorYellow(self.__top_score or 'None') } | { underline(self.__current_player['name']) }: { colorYellow(self.__current_player['score']) }\n")
+    def __display_high_score(self): print(f"{ underline(self.__top_player or 'Top_Score') }: { colorYellow(self.__top_score or 'None') } | { underline(self.__current_player['name']) }: { colorYellow(self.__current_player['score']) }\n")
     
-    def __display_game_data(self): 
-        print(f"Points: { colorGreen(self.__points) } Word: { colorGreen(' '.join(self.__player_letter_guessed).capitalize()) } Lives: { colorGreen(self.__current_player['lives']) }\n")
+    def __display_game_data(self): print(f"Points: { colorGreen(self.__points) } Word: { colorGreen(' '.join(self.__player_letter_guessed).capitalize()) } Lives: { colorGreen(self.__current_player['lives']) }\n")
 
     def __update_score_board(self):
 
