@@ -3,31 +3,27 @@ from os import path
 from constants import words_list, display_texts, should_play_responses
 from helpers import colorGreen, colorYellow, read_from_file, underline, clear_terminal, write_to_file
 
-if not path.exists('./score_board.json'):
-    write_to_file('./score_board.json', {"top_score":{"score":0, "player":''}})
-
-score_board = read_from_file('./score_board.json')
-
-class Hang_man:
+class Hangman:
     def __init__(self, player:str) -> None:
         self.__word:str = choice(words_list).lower()
         self.__points:int = 0
-        self.__user_guess:None|str = None
+        self.__user_guess:str = None
         self.__player_letter_guessed:list[str] = ["_"] * len(self.__word)
 
         self.__top_player:str = score_board['top_score']['player'] 
         self.__top_score:int = score_board['top_score']['score']
 
-        self.__current_player:dict = {}
-        self.__current_player["name"]:str = player
-        self.__current_player["score"]:int = score_board[player] if player in score_board else 0
-        self.__current_player["lives"]:int = len(self.__word)
+        self.__current_player:dict = {
+            "name": player,
+            "score": score_board[player] if player in score_board else 0,
+            "lives": len(self.__word)
+        }
 
-    def __display_high_score(self): print(f"{ underline(self.__top_player or 'Top_Score') }: { colorYellow(self.__top_score or 'None') } | { underline(self.__current_player['name']) }: { colorYellow(self.__current_player['score']) }\n")
+    def __display_high_score(self) -> None: print(f"{ underline(self.__top_player or 'Top_Score') }: { colorYellow(self.__top_score or 'None') } | { underline(self.__current_player['name']) }: { colorYellow(self.__current_player['score']) }\n")
     
-    def __display_game_data(self): print(f"Points: { colorGreen(self.__points) } Word: { colorGreen(' '.join(self.__player_letter_guessed).capitalize()) } Lives: { colorGreen(self.__current_player['lives']) }\n")
+    def __display_game_data(self) -> None: print(f"Points: { colorGreen(self.__points) } Word: { colorGreen(' '.join(self.__player_letter_guessed).capitalize()) } Lives: { colorGreen(self.__current_player['lives']) }\n")
 
-    def __update_score_board(self):
+    def __update_score_board(self) -> None:
 
         if not self.__current_player['name'] in score_board or self.__points > self.__current_player["score"]:
             score_board[self.__current_player['name']] = self.__points
@@ -73,7 +69,7 @@ class Hang_man:
                 clear_terminal(2)
 
                 current_points = self.__points + self.__current_player['lives']
-                next_game = Hang_man(self.__current_player['name'])
+                next_game = Hangman(self.__current_player['name'])
                 next_game.__points = current_points
                 next_game.play_game()
 
@@ -91,6 +87,10 @@ class Hang_man:
             clear_terminal(2)
             
 if __name__ == "__main__":
+
+    if not path.exists('./score_board.json'): write_to_file('./score_board.json', {"top_score":{"score":0, "player":''}})
+    score_board = read_from_file('./score_board.json')
+
     clear_terminal()
 
     if input(display_texts['should_play_game']).capitalize() in should_play_responses:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         print(display_texts['ready_to_play'])
         clear_terminal(4.5)
 
-        Hang_man(player).play_game()
+        Hangman(player).play_game()
 
     else:
         print(display_texts['quit_game'])
