@@ -1,42 +1,47 @@
 from random import choice
 from os import path
-from constants import words_list, display_texts, should_play_responses
+
+from constants import WORDS_LIST, SHOULD_PLAY_RESPONSES, DISPLAY_TEXTS
 from helpers import colorGreen, colorYellow, read_from_file, underline, clear_terminal, write_to_file
 
 class Hangman:
-    def __init__(self, player:str) -> None:
-        self.__word:str = choice(words_list).lower()
-        self.__points:int = 0
-        self.__user_guess:str = None
-        self.__player_letter_guessed:list[str] = ["_"] * len(self.__word)
 
-        self.__top_player:str = score_board['top_score']['player'] 
-        self.__top_score:int = score_board['top_score']['score']
+    
+    def __init__(self, player: str) -> None:
+        self.__word: str = choice(WORDS_LIST).lower()
+        self.__points: int = 0
+        self.__user_guess: str = None
+        self.__player_letter_guessed: list[str] = ["_"] * len(self.__word)
 
-        self.__current_player:dict = {
+        self.__top_player: str = score_board["top_score"]["player"] 
+        self.__top_score: int = score_board["top_score"]["score"]
+
+        self.__current_player: dict = {
             "name": player,
             "score": score_board[player] if player in score_board else 0,
             "lives": len(self.__word)
         }
 
-    def __display_high_score(self) -> None: print(f"{ underline(self.__top_player or 'Top_Score') }: { colorYellow(self.__top_score or 'None') } | { underline(self.__current_player['name']) }: { colorYellow(self.__current_player['score']) }\n")
+    def __display_high_score(self) -> None: 
+        print(f"{ underline(self.__top_player or 'Top_Score') }: { colorYellow(self.__top_score or 'None') } | { underline(self.__current_player['name']) }: { colorYellow(self.__current_player['score']) }\n")
     
-    def __display_game_data(self) -> None: print(f"Points: { colorGreen(self.__points) } Word: { colorGreen(' '.join(self.__player_letter_guessed).capitalize()) } Lives: { colorGreen(self.__current_player['lives']) }\n")
+    def __display_game_data(self) -> None: 
+        print(f"Points: { colorGreen(self.__points) } Word: { colorGreen(' '.join(self.__player_letter_guessed).capitalize()) } Lives: { colorGreen(self.__current_player['lives']) }\n")
 
     def __update_score_board(self) -> None:
 
-        if not self.__current_player['name'] in score_board or self.__points > self.__current_player["score"]:
-            score_board[self.__current_player['name']] = self.__points
+        if not self.__current_player["name"] in score_board or self.__points > self.__current_player["score"]:
+            score_board[self.__current_player["name"]] = self.__points
             self.__current_player["score"] = self.__points
 
         if self.__points > self.__top_score:
             score_board["top_score"]["score"] = self.__points
-            score_board["top_score"]["player"] = self.__current_player['name']
+            score_board["top_score"]["player"] = self.__current_player["name"]
 
             self.__top_score = score_board["top_score"]["score"]
             self.__top_player = score_board["top_score"]["player"]
 
-        write_to_file('./score_board.json', score_board)
+        write_to_file("./score_board.json", score_board)
             
     def __update_game(self) -> None:
 
@@ -58,54 +63,54 @@ class Hangman:
 
         self.__update_game()
 
-        if str(self.__user_guess).lower() != 'quit':
+        if str(self.__user_guess).lower() != "quit":
 
-            if not self.__current_player['lives']:
-                print(display_texts['out_of_lives'])
+            if not self.__current_player["lives"]:
+                print(DISPLAY_TEXTS["out_of_lives"])
                 clear_terminal(2)
 
-            elif self.__user_guess == self.__word or ''.join(self.__player_letter_guessed).lower() == self.__word:
-                print(display_texts['player_wins'])
+            elif self.__user_guess == self.__word or "".join(self.__player_letter_guessed).lower() == self.__word:
+                print(DISPLAY_TEXTS["player_wins"])
                 clear_terminal(2)
 
-                current_points = self.__points + self.__current_player['lives']
-                next_game = Hangman(self.__current_player['name'])
+                current_points = self.__points + self.__current_player["lives"]
+                next_game = Hangman(self.__current_player["name"])
                 next_game.__points = current_points
                 next_game.play_game()
 
             else:
                 if not self.__user_guess or not self.__user_guess in self.__word:
-                    self.__user_guess = input(display_texts['user_guess']).lower()
+                    self.__user_guess = input(DISPLAY_TEXTS["user_guess"]).lower()
                     self.play_game()
                 else:
-                    self.__current_player['lives'] -= 1
+                    self.__current_player["lives"] -= 1
                     self.__user_guess = None
                     clear_terminal()
                     self.play_game()
         else:
-            print(display_texts['quit_game'])
+            print(DISPLAY_TEXTS["quit_game"])
             clear_terminal(2)
             
 if __name__ == "__main__":
 
-    if not path.exists('./score_board.json'): write_to_file('./score_board.json', {"top_score":{"score":0, "player":''}})
-    score_board = read_from_file('./score_board.json')
+    if not path.exists("./score_board.json"): write_to_file("./score_board.json", {"top_score":{"score":0, "player":""}})
+    score_board = read_from_file("./score_board.json")
 
     clear_terminal()
 
-    if input(display_texts['should_play_game']).capitalize() in should_play_responses:
+    if input(DISPLAY_TEXTS["should_play_game"]).capitalize() in SHOULD_PLAY_RESPONSES:
         clear_terminal()
-        player = input(display_texts['get_player_name']).capitalize()
+        player = input(DISPLAY_TEXTS["get_player_name"]).capitalize()
         clear_terminal()
 
-        print(f'Welcome back, { player }') if player in score_board else print(f"Let's play, { player }")
+        print(f"Welcome back, { player }") if player in score_board else print(f"Let's play, { player }")
         clear_terminal(2)
 
-        print(display_texts['ready_to_play'])
+        print(DISPLAY_TEXTS["ready_to_play"])
         clear_terminal(4.5)
 
         Hangman(player).play_game()
 
     else:
-        print(display_texts['quit_game'])
+        print(DISPLAY_TEXTS["quit_game"])
         clear_terminal(2)
