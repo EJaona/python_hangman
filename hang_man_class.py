@@ -62,7 +62,7 @@ class Hang_man:
 
         self.__update_game()
 
-        if self.__user_guess != 'quit':
+        if str(self.__user_guess).lower() != 'quit':
 
             if not self.__current_player['lives']:
                 print(display_texts['out_of_lives'])
