@@ -119,4 +119,4 @@ if __name__ == "__main__":
     
     player_name = Input(300, 200, 400, 50).get_text("Whats your name, player?")
     main(player_name)
-pygame.quit()
+    pygame.quit()
