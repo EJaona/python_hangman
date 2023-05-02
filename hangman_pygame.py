@@ -30,8 +30,8 @@ def main(player_name:str) -> None:
         display_helpers.display_player_lives(hangman.get_state("player")["lives"])
 
         display_helpers.display_high_score(
-            hangman.get_state("high_score")["player"],
-            hangman.get_state("high_score")["score"]
+            hangman.get_state("top")["player"],
+            hangman.get_state("top")["score"]
         )
 
         display_helpers.display_player_score(

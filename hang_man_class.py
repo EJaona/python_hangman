@@ -80,7 +80,7 @@ class Hangman:
             "word": self.__word, 
             "user_guess": self.__player_guess, 
             "guesses": self.__letters_guessed, 
-            "high_score":{
+            "top":{
                 "player": self.__top_player,
                 "score": self.__top_score
             },
