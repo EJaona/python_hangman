@@ -13,10 +13,10 @@ def create_header_font(text:str, color:str = 'black') -> str:
 def create_paragraph_font(text:str, color:str = 'black') -> pygame.Rect: 
     return letter_font.render(text, 1, color)
 
-def create_input_box(position_x, position_y, width, height) -> pygame.Rect:
+def create_rect(position_x, position_y, width, height) -> pygame.Rect:
     return pygame.Rect((position_x, position_y), (width, height))
 
-def draw_shape_to_screen(rect, color='black'):
+def draw_rect_to_screen(rect, color='black'):
     pygame.draw.rect(SCREEN, color, rect, 2)
 
 def draw_image_to_screen(img_number:int) -> None: 
@@ -56,3 +56,10 @@ def draw_buttons_to_screen() -> None:
             text = create_paragraph_font(letter['letter'])
             SCREEN.blit(text, (letter['x'] - text.get_width()/2, letter['y'] - text.get_width()/2))
 
+def greet_player(player):
+    clear_screen()
+    if player['is_new_player']:
+        display_text(f"Let's play, {player['name']}!")
+    else:
+        display_text(f"Welcome back, {player['name']}!")
+    delayed_screen_update(2000)

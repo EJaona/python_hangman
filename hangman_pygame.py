@@ -12,9 +12,12 @@ def main(player_name:str) -> None:
 # Game state
     hangman = Hangman(player_name)
     hangman.update_player_lives(6)
-    word = hangman.get_state()["word"]
-    image_to_display = (len(display_setup.images) - 1) - hangman.get_state()["player"]["lives"]
+    word = hangman.get_state("word")
+    image_to_display = (len(display_setup.images) - 1) - hangman.get_state("player")["lives"]
     play = True
+
+    # Greet player
+    display_helpers.greet_player(hangman.get_state('player'))
 
     # Game loop
     while play:
@@ -23,22 +26,22 @@ def main(player_name:str) -> None:
         display_helpers.clear_screen()
 
         display_helpers.draw_image_to_screen(image_to_display)
-        display_helpers.display_letters_guessed_to_text(hangman.get_state()["guesses"])
-        display_helpers.display_player_lives(hangman.get_state()["player"]["lives"])
+        display_helpers.display_letters_guessed_to_text(hangman.get_state("guesses"))
+        display_helpers.display_player_lives(hangman.get_state("player")["lives"])
 
         display_helpers.display_high_score(
-            hangman.get_state()["high_score"]["player"],
-            hangman.get_state()["high_score"]["score"]
+            hangman.get_state("high_score")["player"],
+            hangman.get_state("high_score")["score"]
         )
 
         display_helpers.display_player_score(
-            hangman.get_state()["player"]["name"],
-            hangman.get_state()["points"]
+            hangman.get_state("player")["name"],
+            hangman.get_state("points")
         )
 
         display_helpers.draw_buttons_to_screen()
 
-        if not hangman.get_state()["player"]["lives"]:
+        if not hangman.get_state("player")["lives"]:
             display_helpers.delayed_screen_update(500)
 
             display_helpers.display_text(f"GAME OVER, MAN!")
@@ -49,24 +52,24 @@ def main(player_name:str) -> None:
 
             play = False
 
-        if "".join(hangman.get_state()["guesses"]) == word:
+        if "".join(hangman.get_state("guesses")) == word:
 
             display_helpers.delayed_screen_update(1000)
 
             display_helpers.display_text(f"{word.capitalize()}")
             display_helpers.delayed_screen_update(1500)
 
-            display_helpers.display_text(f"+ {hangman.get_state()['player']['lives']}")
+            display_helpers.display_text(f"+ {hangman.get_state('player')['lives']}")
             display_helpers.delayed_screen_update(2000)
             
             for letter in letter_buttons.letters: letter["is_visible"] = True
 
             # Update state
-            current_points = hangman.get_state()["points"] + hangman.get_state()["player"]["lives"]
+            current_points = hangman.get_state("points") + hangman.get_state("player")["lives"]
             hangman.update_player_points(current_points)
             hangman.update_player_lives(6)
             word = hangman.reset_word()
-            image_to_display = (len(display_setup.images) - 1) - hangman.get_state()["player"]["lives"]
+            image_to_display = (len(display_setup.images) - 1) - hangman.get_state("player")["lives"]
 
         else:
             
@@ -89,7 +92,7 @@ def main(player_name:str) -> None:
 
                                 else:
                                     image_to_display += 1
-                                    hangman.update_player_lives(hangman.get_state()["player"]["lives"] - 1)
+                                    hangman.update_player_lives(hangman.get_state("player")["lives"] - 1)
 
                                 letter["is_visible"] = False
 
@@ -106,7 +109,7 @@ def main(player_name:str) -> None:
 
                                 else:
                                     image_to_display += 1
-                                    hangman.update_player_lives(hangman.get_state()["player"]["lives"] - 1)
+                                    hangman.update_player_lives(hangman.get_state("player")["lives"] - 1)
 
                                 letter["is_visible"] = False
 
@@ -114,6 +117,6 @@ def main(player_name:str) -> None:
 
 if __name__ == "__main__":
     
-    player_name = Input(300, 200, 400, 50).get_text('Whats your name, player?')
+    player_name = Input(300, 200, 400, 50).get_text("Whats your name, player?")
     main(player_name)
-    pygame.quit()
+pygame.quit()
