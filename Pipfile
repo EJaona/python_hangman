@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pygame = "*"
+
+[scripts]
+play = "python3 main.py"
+game = "python3 game.py"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"

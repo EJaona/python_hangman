@@ -1,28 +1,30 @@
 import time
-from pygame_hangman.setup.game_setup import pygame
-from pygame_hangman.setup.display_setup import SCREEN
-import pygame_hangman.helpers.display_helpers  as display_helpers
+
+from pygame_package.setup.game_setup import pygame
+from pygame_package.setup.display_setup import SCREEN
+from .pg import create_rect, create_paragraph_font, clear_screen
+from .display  import display_text, display_rect_to_screen
 
 class Input:
 
-    def __init__(self, position_x, position_y, width, height) -> None:
-        self.position_y = position_y
-        self.position_x = position_x
+    def __init__(self, *, x, y, width, height, color="black") -> None:
+        self.y:int = y
+        self.x:int = x
         self.user_text:str = ''
         self.collect_input:bool = True
-        self.input_box:pygame.Rect = display_helpers.create_rect(position_x, position_y, width, height)
-        self.border_color = 'black'
+        self.input_box:pygame.Rect = create_rect(x, y, width, height)
+        self.border_color:str = color
         self.cursor = pygame.Rect(self.input_box.topleft, (5, self.input_box.height))
 
 
-    def get_text(self, display_text) -> str:
+    def get_text(self, text) -> str:
 
         while self.collect_input:
 
-            display_helpers.clear_screen()
-            display_helpers.display_text(display_text, (self.position_x - 150, self.position_y - 100))
-            display_helpers.draw_rect_to_screen(self.input_box, self.border_color)
-            user_text_rect = SCREEN.blit(display_helpers.create_paragraph_font(self.user_text), (self.position_x, self.position_y))
+            clear_screen()
+            display_text(text, (self.x - 150, self.y - 100))
+            display_rect_to_screen(self.input_box, self.border_color)
+            user_text_rect = SCREEN.blit(create_paragraph_font(self.user_text), (self.x, self.y))
             
             for event in pygame.event.get():
 

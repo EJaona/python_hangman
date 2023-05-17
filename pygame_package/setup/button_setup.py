@@ -1,4 +1,4 @@
-from pygame_hangman.setup.display_setup import WIDTH
+from .display_setup import WIDTH
 
 RADIUS = 30
 
@@ -10,12 +10,10 @@ start_y = 350
 
 A = 65
 
-letters = [
-    {
+letters = {
+    chr(A + i).lower(): {
         "x":start_x + GAP * 2 + ((RADIUS * 2 + GAP) * (i % 13)), 
         "y": start_y + ((i // 13) * (GAP + RADIUS * 2)),
-        "letter": str(chr(A + i)).lower(),
         "is_visible": True
-    } 
-    for i in range(26)
-]
+    } for i in range(26)
+}
