@@ -1,9 +1,9 @@
 import time
 
-from pygame_package.setup.game_setup import pygame
-from pygame_package.setup.display_setup import SCREEN
-from .pg import create_rect, create_paragraph_font, clear_screen
-from .display  import display_text, display_rect_to_screen
+from pygame_.setup.game_setup import pygame
+from pygame_.setup.display_setup import SCREEN
+from ..utils.pg import create_rect, create_paragraph_font, clear_screen
+from ..utils.display  import display_text, display_rect_to_screen
 
 class Input:
 

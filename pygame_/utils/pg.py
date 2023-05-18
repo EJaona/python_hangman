@@ -1,6 +1,5 @@
-from pygame_package.setup.display_setup  import SCREEN, game_font, letter_font
-from pygame_package.setup.game_setup import pygame
-from . import display
+from pygame_.setup.display_setup  import SCREEN, game_font, letter_font
+from pygame_.setup.game_setup import pygame
 
 def create_header_font(text:str, color:str = 'black') -> str: 
     return game_font.render(text, 1, color)
@@ -23,11 +22,3 @@ def delayed_screen_update(time:int = 0) -> None:
     pygame.display.update()
     pygame.time.wait(time)
     clear_screen()
-
-def greet_player(player):
-    clear_screen()
-    if player['is_new_player']:
-        display.display_text(f"Let's play, {player['name']}!")
-    else:
-        display.display_text(f"Welcome back, {player['name']}!")
-    delayed_screen_update(2000)

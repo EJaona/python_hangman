@@ -1,7 +1,7 @@
-from pygame_package.setup.display_setup  import SCREEN
-from pygame_package.setup.button_setup import letters as letters_dict
-from pygame_package.setup.game_setup import pygame
-from .pg import create_header_font, create_paragraph_font
+from pygame_.setup.display_setup  import SCREEN
+from pygame_.setup.button_setup import letters as letters_dict
+from pygame_.setup.game_setup import pygame
+from .pg import create_header_font, create_paragraph_font, clear_screen, delayed_screen_update, was_rect_clicked
 
 
 def position_x_center(text_width): return (SCREEN.get_width()/2) - (text_width/2)
@@ -42,3 +42,20 @@ def display_buttons_to_screen() -> None:
             rect = SCREEN.blit(text, (letters_dict[letter]['x'] - text.get_width()/2, letters_dict[letter]['y'] - text.get_width()/2))
             letters_dict[letter]["rect"] = rect
 
+def greet_player(player):
+    clear_screen()
+    if player.is_new_player:
+        display_text(f"Let's play, {player.name}!")
+    else:
+        display_text(f"Welcome back, {player.name}!")
+    delayed_screen_update(2000)
+
+def get_letter_clicked() -> str:
+
+        for key in letters_dict:
+            mouse_position = pygame.mouse.get_pos()
+            letter_obj = letters_dict[key]
+            letter_clicked = was_rect_clicked(letter_obj["rect"], mouse_position)
+
+            if letter_clicked and letter_obj["is_visible"]: 
+                return key
