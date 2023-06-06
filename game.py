@@ -10,37 +10,36 @@ def main(player_name:str) -> None:
     
     # Game state
     game = Hangman(player_name)
-    word = game.get_state("word")
     play = True
 
     # Greet player
-    display.greet_player(game.get_state('player'))
+    display.greet_player(game.get_state().player)
             
     # Game loop
     while play:
-
-        image_to_display = images[game.get_state("lives")]
+        word = game.get_state().word
+        image_to_display = images[game.get_state().lives]
         
         clock.tick(60)
         clear_screen()
 
         display.display_image_to_screen(image_to_display)
-        display.display_letters_guessed_to_text(game.get_state("letters_guessed"))
-        display.display_player_lives(game.get_state("lives"))
+        display.display_letters_guessed_to_text(game.get_state().letters_guessed)
+        display.display_player_lives(game.get_state().lives)
 
         display.display_high_score(
-            game.get_state("top").player,
-            game.get_state("top").score
+            game.get_state().top_record.player,
+            game.get_state().top_record.score
         )
 
         display.display_player_score(
-            game.get_state("player").name,
-            game.get_state("points")
+            game.get_state().player.name,
+            game.get_state().points
         )
 
         display.display_buttons_to_screen()
 
-        if not game.get_state("lives"):
+        if not game.get_state().lives:
             delayed_screen_update(500)
 
             display.display_text(f"GAME OVER, MAN!")
@@ -51,22 +50,21 @@ def main(player_name:str) -> None:
 
             play = False
 
-        if "".join(game.get_state("letters_guessed")) == word:
+        if "".join(game.get_state().letters_guessed) == word:
 
             delayed_screen_update(1000)
 
             display.display_text(f"{word.capitalize()}")
             delayed_screen_update(1500)
 
-            display.display_text(f"+ {game.get_state('lives')}")
+            display.display_text(f"+ {game.get_state().lives}")
             delayed_screen_update(2000)
             
             for letter_key in letter_dict: letter_dict[letter_key]["is_visible"] = True
 
             # Update state
             game.update_player_points()
-            game.reset_lives()
-            word = game.reset_word()
+            game.reset_game()
 
         # Event loop
         for event in pygame.event.get():

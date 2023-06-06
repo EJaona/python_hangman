@@ -42,7 +42,7 @@ def display_buttons_to_screen() -> None:
             rect = SCREEN.blit(text, (letters_dict[letter]['x'] - text.get_width()/2, letters_dict[letter]['y'] - text.get_width()/2))
             letters_dict[letter]["rect"] = rect
 
-def greet_player(player):
+def greet_player(player:str) -> None:
     clear_screen()
     if player.is_new_player:
         display_text(f"Let's play, {player.name}!")

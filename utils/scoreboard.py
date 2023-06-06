@@ -1,21 +1,33 @@
 import json
-from helpers.top_score import Top
 from utils.fs import write_to_file, read_from_file, create_file
 
 scoreboard_path = "scoreboard.json"
 
-def create_scoreboard(file_path: str = "scoreboard.json") -> json:
-    return create_file(file_path, {"top":{"score":0, "player":""}, "scores":{}})
+def create_scoreboard(player_name:str) -> json:
+    create_file(scoreboard_path, {"top":{"score":0, "player":None}, "scores":{}})
+    add_player_to_scoreboard(player_name)
+
+def add_player_to_scoreboard(player_name:str) -> None:
+    scoreboard = read_from_file(scoreboard_path)
+    if not player_in_scoreboard(player_name):
+        scoreboard["scores"][player_name] = 0
+        update_scoreboard_file(scoreboard)
+
+def player_in_scoreboard(player_name:str) -> bool:
+    scoreboard = read_from_file(scoreboard_path)
+    return player_name in scoreboard["scores"]
+
+def get_player_scoreboard_record(player_name:str) -> int:
+    scoreboard = read_from_file(scoreboard_path)
+    return scoreboard["scores"][player_name] if player_name in scoreboard["scores"] else 0
 
 def update_scoreboard_file(updated_scoreboard:json) -> None:
     write_to_file(scoreboard_path, updated_scoreboard)
 
-def update_top_scoreboard(player_name:str, points:int) -> Top:
+def update_top_record(player_name:str, points:int) -> None:
     scoreboard = read_from_file(scoreboard_path)
-    scoreboard["top"]["player"] = player_name
-    scoreboard["top"]["score"] = points
+    scoreboard["top"] = {"player":player_name, "score": points}
     update_scoreboard_file(scoreboard)
-    return Top(**scoreboard["top"])
 
 def update_player_scoreboard(player_name:str, points:int) -> int:
     scoreboard = read_from_file(scoreboard_path)
@@ -23,13 +35,10 @@ def update_player_scoreboard(player_name:str, points:int) -> int:
     update_scoreboard_file(scoreboard)
     return scoreboard["scores"][player_name]
 
-def get_top_scoreboard_record() -> Top:
+def get_top_scoreboard_record() -> dict[str, int]:
     scoreboard = read_from_file(scoreboard_path)
-    return Top(**scoreboard["top"])
+    return {"player":scoreboard["top"]["player"], "score":scoreboard["top"]["score"]}
 
-def get_player_scoreboard_record(player_name:str) -> int:
-    scoreboard = read_from_file(scoreboard_path)
-    return scoreboard["scores"][player_name] if player_name in scoreboard["scores"] else 0
 
 def get_player_rank(player_name:str) -> int | dict[int, list]:
     scoreboard = read_from_file(scoreboard_path)
@@ -44,7 +53,3 @@ def get_player_rank(player_name:str) -> int | dict[int, list]:
         "player":player_rank + 1,
         "overall": ranking_lst
     }
-
-def player_in_scoreboard(player_name:str) -> bool:
-    scoreboard = read_from_file(scoreboard_path)
-    return player_name in scoreboard["scores"]
