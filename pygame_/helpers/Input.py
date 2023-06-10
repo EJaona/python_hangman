@@ -2,28 +2,28 @@ import time
 
 from pygame_.setup.game_setup import pygame
 from pygame_.setup.display_setup import SCREEN
-from ..utils.pg import create_rect, create_paragraph_font, clear_screen
-from ..utils.display  import display_text, display_rect_to_screen
+from ..utils.gui import create_rect, create_paragraph_font, clear_screen
+from ..utils import display
 
 class Input:
+
+    user_text:str = ''
+    collect_input:bool = True
 
     def __init__(self, *, x, y, width, height, color="black") -> None:
         self.y:int = y
         self.x:int = x
-        self.user_text:str = ''
-        self.collect_input:bool = True
         self.input_box:pygame.Rect = create_rect(x, y, width, height)
         self.border_color:str = color
         self.cursor = pygame.Rect(self.input_box.topleft, (5, self.input_box.height))
-
 
     def get_text(self, text) -> str:
 
         while self.collect_input:
 
             clear_screen()
-            display_text(text, (self.x - 150, self.y - 100))
-            display_rect_to_screen(self.input_box, self.border_color)
+            display.text(text, (self.x - 150, self.y - 100))
+            display.display_rect_to_screen(self.input_box, self.border_color)
             user_text_rect = SCREEN.blit(create_paragraph_font(self.user_text), (self.x, self.y))
             
             for event in pygame.event.get():

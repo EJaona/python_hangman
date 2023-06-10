@@ -3,7 +3,7 @@ from helpers.game_state import GameState
 from helpers.top_score import TopRecord
 from helpers.player import Player
 from utils.constants import SHOULD_PLAY_RESPONSES, DISPLAY_TEXTS
-from utils.fs import clear_terminal, colorGreen, colorYellow, underline
+from utils.io import clear_terminal, colorGreen, colorYellow, underline
 from utils.scoreboard import create_scoreboard
 
 
@@ -25,9 +25,9 @@ class Hangman:
         player_score:str = colorYellow(self._player.top_score)
 
         if top_player == player_name:
-            return print(f"{top_player}: {top_score}\n")
-
-        print(f"{top_player}: {top_score} | {player_name}: {player_score}\n")
+            print(f"{top_player}: {top_score}\n")
+        else:
+            print(f"{top_player}: {top_score} | {player_name}: {player_score}\n")
     
     def __display_game_props(self) -> None:
         points = f"Points: {colorGreen(self._game_props.points)}"
@@ -48,6 +48,9 @@ class Hangman:
         self.__display_high_score()
         self.__display_game_props()
 
+    def greet_player(self) -> str:
+        return self._player.greet()
+    
     def reset_game(self) -> str:
         self._game_props.reset()
 
@@ -78,7 +81,7 @@ class Hangman:
 
         if self._game_props.player_guess == "rank":
             ranking = self._player.get_scoreboard_ranking()
-            print(DISPLAY_TEXTS['player_ranking'], f"{ranking.player} out of {len(ranking.overall)}")
+            print(DISPLAY_TEXTS['player_ranking'], f"{ranking.player} out of {len(ranking.player_list)}")
             clear_terminal(2)
         
         if self._game_props.word_guessed():
@@ -107,12 +110,12 @@ if __name__ == "__main__":
 
     if input(DISPLAY_TEXTS["should_play_game"]).capitalize() in SHOULD_PLAY_RESPONSES:
         clear_terminal()
+
         name = input(DISPLAY_TEXTS["get_player_name"])
         game = Hangman(name)
         clear_terminal()
 
-        player = game.get_state().player
-        print(f"Let's play, {player.name}") if player.is_new_player else print(f"Welcome back, {player.name}")
+        print(game.greet_player())
         clear_terminal(2)
 
         print(DISPLAY_TEXTS["ready_to_play"])
